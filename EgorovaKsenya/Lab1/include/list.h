@@ -1,41 +1,41 @@
-п»ї#pragma once
+#pragma once
 using namespace std;
 template<typename T>
 class Node
 {
 public:
-	T data;		                                                    
-	Node* next;                                                        
-	Node() { next = nullptr; }							   
-	Node(T Data) { data = Data; next = nullptr; }					    
-	bool operator< (const Node& z) const { return (data < z.data); }//РїРµСЂРµРіСЂСѓР·РєР° РѕРїРµСЂР°С†РёРё РјРµРЅСЊС€Рµ
-	bool operator> (const Node& z) const { return (data > z.data); }//РїРµСЂРµРіСЂСѓР·РєР° РѕРїРµСЂР°С†РёРё Р±РѕР»СЊС€Рµ
+	T data;
+	Node* next;
+	Node() { next = nullptr; }
+	Node(T Data) { data = Data; next = nullptr; }
+	bool operator< (const Node& z) const { return (data < z.data); }//перегрузка операции меньше
+	bool operator> (const Node& z) const { return (data > z.data); }//перегрузка операции больше
 };
 
 template<typename T>
 class list
 {
 private:
-	Node<T>* head;					
+	Node<T>* head;
 	Node<T>* current;
 public:
-	void Clean();//РѕС‡РёСЃС‚РєР° СЃРїРёСЃРєР°
-	list();//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ					
-	list(const list<T>& a);//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєРѕРїРёСЂРѕРІРЅРёСЏ       	    
+	void Clean();//очистка списка
+	list();//конструктор по умолчанию					
+	list(const list<T>& a);//конструктор копировния       	    
 	~list();
-	list<T>& operator=(const list<T>& a);//РїРµСЂРµРіСЂСѓР·РєР° РѕРїРµСЂР°С‚РѕСЂР° РїСЂРёСЃРІР°РёРІР°РЅРёСЏ   
-	//РјРµС‚РѕРґС‹
-	void Insert(T elem);//РІСЃС‚Р°РІРєР° СЌР»РµРјРµРЅС‚Р° РІ СѓРїРѕСЂСЏРґРѕС‡РµРЅРЅС‹Р№ СЃРїРёСЃРѕРє
-	void InsertToTail(T elem);//РІСЃС‚Р°РІРєР° РІ РєРѕРЅРµС† СЃРїРёСЃРєР° 
-	void InsertAfter(Node<T>* N, T Data);//РІСЃС‚Р°РІРєР° РїРѕСЃР»Рµ РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ Р·РІРµРЅР°
-	//РїРµСЂРµРіСЂСѓР·РєР° РѕРїРµСЂР°С‚РѕСЂРѕРІ СЃСЂР°РІРЅРµРЅРёСЏ
+	list<T>& operator=(const list<T>& a);//перегрузка оператора присваивания   
+	//методы
+	void Insert(T elem);//вставка элемента в упорядоченный список
+	void InsertToTail(T elem);//вставка в конец списка 
+	void InsertAfter(Node<T>* N, T Data);//вставка после определенного звена
+	//перегрузка операторов сравнения
 	bool operator==(const list<T>& sp) const;
 	bool operator!=(const list<T>& sp) const { return !(*this == sp); }
-	//РјРµС‚РѕРґС‹ РЅР°РІРёРіР°С†РёРё
-	void Reset() { currentrent = head->next; }//РІ РЅР°С‡Р°Р»Рѕ СЃРїРёСЃРєР°
-	void Step() { current = current->next; }//С€Р°Рі РЅР° РѕРґРЅРѕ Р·РІРµРЅРѕ РІРїРµСЂРµРґ
-	Node<T>* Getcurrent() const { return current; }//РїРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰РёР№ СЌР»РµРјРµРЅС‚
-	bool IsNotOver() const { return !(current == head); }//РїСЂРѕРІРµСЂРєР° РЅР° РѕРєРѕРЅС‡Р°РЅРёРµ СЃРїРёСЃРєР°
+	//методы навигации
+	void Reset() { current = head->next; }//в начало списка
+	void Step() { current = current->next; }//шаг на одно звено вперед
+	Node<T>* Getcurrent() const { return current; }//получить текущий элемент
+	bool IsNotOver() const { return !(current == head); }//проверка на окончание списка
 };
 
 
@@ -110,13 +110,15 @@ list<T>& list<T>::operator=(const list<T>& a)
 }
 
 template <typename T>
-void list<T>::Insert(T elem)  //РІСЃС‚Р°РІРєР° СЌР»РµРјРµРЅС‚Р° РІ СѓРїРѕСЂСЏРґРѕС‡РµРЅРЅС‹Р№ СЃРїРёСЃРѕРє
+void list<T>::Insert(T elem)  //вставка элемента в упорядоченный список
 {
 	Node<T>* actual = head;
 	Node<T>* el = new Node<T>(elem);
 
 	while ((actual->next != head) && (*(actual->next) < *el))
+	{
 		actual = actual->next;
+	}
 	Node<T>* actual_2 = actual->next;
 	actual->next = el;
 	actual->next->next = actual_2;
@@ -143,17 +145,19 @@ bool list<T>::operator==(const list<T>& sp) const
 }
 
 template<typename T>
-void list<T> ::InsertToTail(T elem)  //РІСЃС‚Р°РІРєР° РІ РєРѕРЅРµС† СЃРїРёСЃРєР° 
+void list<T> ::InsertToTail(T elem)  //вставка в конец списка 
 {
 	Reset();
 	while (current->next != head)
+	{
 		Step();
+	}
 	Node<T>* temp = current->next;
 	current->next = new Node<T>(elem);
 	current->next->next = temp;
 }
 template <class T>
-void list<T>::InsertAfter(Node<T>* N, T Data)  //РІСЃС‚Р°РІРєР° РїРѕСЃР»Рµ РѕРїСЂРµРґРµР»РµРЅРЅРѕРіРѕ Р·РІРµРЅР°
+void list<T>::InsertAfter(Node<T>* N, T Data)  //вставка после определенного звена
 {
 	Node<T>* temp = N->next;
 	N->next = new Node<T>(Data);
